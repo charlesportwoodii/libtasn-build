@@ -10,8 +10,8 @@ apt-get install build-essential libgmp-dev libunbound-dev m4
 
 # Building and Packaging
 ```
-git clone https://github.com/charlesportwoodii/libtasn
-cd liblnettle
+git clone https://github.com/charlesportwoodii/libtasn-build
+cd libtasn-build
 
 sudo make VERSION=<version>
 # deb packages can be built with
