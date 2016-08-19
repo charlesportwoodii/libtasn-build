@@ -32,19 +32,38 @@ libtasn:
 	make -j$(CORES) && \
 	make install
 
-package:
-	cd /tmp/libtasn1-$(VERSION) && \
-	checkinstall \
-	    -D \
-	    --fstrans \
-	    -pkgrelease "$(RELEASEVER)"-"$(RELEASE)" \
-	    -pkgrelease "$(RELEASEVER)"~"$(RELEASE)" \
-	    -pkgname "libtasn1" \
-	    -pkglicense GPLv3 \
-	    -pkggroup GPG \
-	    -maintainer charlesportwoodii@ethreal.net \
-	    -provides "libtasn1" \
-	    -requires "" \
-	    -conflicts "" \
-	    -pakdir /tmp \
-	    -y
+fpm_debian:
+	echo "Packaging libtasn1 for Debian"
+
+	cd /tmp/libtasn1-$(VERSION) && make install DESTDIR=/tmp/libtasn1-$(VERSION)-install
+
+	fpm -s dir \
+		-t deb \
+		-n libtasn1 \
+		-v $(VERSION)-$(RELEASEVER)~$(shell lsb_release --codename | cut -f2) \
+		-C /tmp/libtasn1-$(VERSION)-install \
+		-p libtasn1_$(VERSION)-$(RELEASEVER)~$(shell lsb_release --codename | cut -f2)_$(shell arch).deb \
+		-m "charlesportwoodii@erianna.com" \
+		--license "GPLv3" \
+		--url https://github.com/charlesportwoodii/libtasn1-build \
+		--description "libtasn1" \
+		--deb-systemd-restart-after-upgrade
+
+fpm_rpm:
+	echo "Packaging libtasn1 for RPM"
+
+	cd /tmp/libtasn1-$(VERSION) && make install DESTDIR=/tmp/libtasn1-$(VERSION)-install
+
+	fpm -s dir \
+		-t rpm \
+		-n libtasn1 \
+		-v $(VERSION)_$(RELEASEVER) \
+		-C /tmp/libtasn1-$(VERSION)-install \
+		-p libtasn1_$(VERSION)-$(RELEASEVER)_$(shell arch).rpm \
+		-m "charlesportwoodii@erianna.com" \
+		--license "GPLv3" \
+		--url https://github.com/charlesportwoodii/libtasn1-build \
+		--description "libtasn1" \
+		--vendor "Charles R. Portwood II" \
+		--rpm-digest sha384 \
+		--rpm-compression gzip
