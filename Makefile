@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 # Dependency Versions
-VERSION?=4.7
+VERSION?=4.12
 RELEASEVER?=1
 
 # Bash data
